@@ -75,8 +75,8 @@ export const TableHeader = () => {
 						</span>
 					</th>
 					<th className='table-header'>Notes</th>
-					<th className='table-header'></th>
-					<th className='table-header'></th>
+					<th className='table-header-update-options'></th>
+					<th className='table-header-update-options'></th>
 				</tr>
 			</thead>
 		</>

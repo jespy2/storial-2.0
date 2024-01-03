@@ -17,8 +17,11 @@ export const TableBody = () => {
 		<>
 			{bookState &&
 				bookState.map((book) => (
-					<tbody className='border-separate space-y-6 p-5 mt-10' key={book._id as Key}>
-						<tr className='table-row' >
+					<tbody
+						className='border-separate space-y-6 p-5 mt-10'
+						key={book._id as Key}
+					>
+						<tr className='table-row'>
 							<td className='border-r p-3'>
 								<div className='pill'>
 									<Pill book={book} />
@@ -27,9 +30,9 @@ export const TableBody = () => {
 							<td className='border-r p-3'>{book.book.title}</td>
 							<td className='border-r p-3'>{book.book.author}</td>
 							<td className='p-3'>{book.book.notes}</td>
-							<td>
+							<td className='update-book-cell'>
 								<PencilIcon
-									className='link-icon'
+									className='update-book-btn'
 									role='button'
 									onClick={() =>
 										dispatch(
@@ -42,9 +45,9 @@ export const TableBody = () => {
 								/>
 							</td>
 
-							<td>
+							<td className='update-book-cell'>
 								<TrashIcon
-									className='link-icon'
+									className='update-book-btn'
 									onClick={() =>
 										dispatch(
 											openAlert({

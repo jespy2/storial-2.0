@@ -1,9 +1,11 @@
 import { Logout, ModeToggle } from '../..'
+import { useAppSelector } from '../../../hooks'
 
-export const Header = ({ title }:{title: string}) => {
+export const Header = ({ title }: { title: string }) => {
+  const loggedInState = useAppSelector((state) => state.auth.auth.isAuthenticated)
   return (
     <>
-      <Logout />
+      {loggedInState && <Logout />}
       <ModeToggle />
       <div className='header-container'>
         <img

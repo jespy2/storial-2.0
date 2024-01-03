@@ -70,8 +70,12 @@
 }
 
 /* TABLE */
-.link-icon {
-  @apply h-5 w-5 text-blue-500 hover:text-gray-400
+.update-book-cell {
+  @apply w-10
+}
+
+.update-book-btn {
+  @apply h-5 w-5 place-content-end text-blue-500 hover:text-gray-400
 }
 
 .sortIcons {
@@ -83,7 +87,11 @@
 }
 
 .table-header {
-  @apply sticky top-0 py-2 text-xs md:text-sm text-left md:px-4 bg-blue-300 hover:bg-gray-400
+  @apply sticky top-0 min-w-40 py-2 text-xs md:text-sm text-left md:px-4 bg-blue-300 hover:bg-gray-400
+}
+
+.table-header-update-options {
+  @apply sticky top-0 w-10 py-2 text-xs md:text-sm text-left md:px-4 bg-blue-300 hover:bg-gray-400
 }
 
 .table-row {
