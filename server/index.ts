@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import { connectToDatabase } from './service/database.services';
 import { authRouter, bookRouter } from './routes';
 const app = express();
-const apiPort = 8000;
+const apiPort = process.env.PORT || 8000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
