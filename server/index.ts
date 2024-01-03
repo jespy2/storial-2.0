@@ -1,10 +1,9 @@
 import express from 'express'
 import cors from 'cors'
-
 import cookieParser from 'cookie-parser';
-import DB from './db'
-import { authRouter, bookRouter} from './routes'
 
+import { connectToDatabase } from './service/database.services';
+import { authRouter, bookRouter } from './routes';
 const app = express();
 const apiPort = 8000;
 
@@ -16,9 +15,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-DB.on('error', console.error.bind(console, 'MongoDB connection error:'));
+connectToDatabase()
+  .then(() => {
+    app.use('/auth', authRouter);
+    app.use('/api', bookRouter);
 
-app.use('/auth', authRouter);
-app.use('/api', bookRouter);
-
-app.listen(apiPort, () => console.log(`🤖 Server running on port ${apiPort} 🚀`));
+    app.listen(apiPort, () => console.log(`🤖 Server running on port ${apiPort} 🚀`));
+  })
+  .catch((error: Error) => {
+    console.log("Database connection failed", error)
+  });

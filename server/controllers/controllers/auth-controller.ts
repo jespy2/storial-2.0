@@ -1,9 +1,14 @@
-import { User } from '../../models/';
+import { Collection } from 'mongodb';
 import bcrypt from 'bcryptjs';
 
+import { connectToDatabase, collections } from '../../service/database.services';
 import { createSecretToken } from '../../util/SecretToken';
 import { IAuthController, IUser } from '../../types';
 
+let users: Collection<IUser> | undefined;
+connectToDatabase().then(() => {
+  users = collections.users;
+})
 
 const authController = {} as IAuthController;
 
@@ -11,7 +16,7 @@ authController.createUser = async (req, res, next) => {
   const newUser: IUser = req.body;
   const { email } = newUser;
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await users?.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: 'User already exists' });
       return;
@@ -24,8 +29,16 @@ authController.createUser = async (req, res, next) => {
        });
       return;
     }
-    const user = await User.create(newUser);
-    const token = createSecretToken(user._id.toString());
+    const user = await users?.insertOne({
+      email: newUser.email,
+      username: newUser.username,
+      password: newUser.password,
+      books: [],
+      createdAt: new Date()
+    } as IUser);
+    const token = user
+      ? createSecretToken(user.insertedId.toString())
+      : undefined;
     res.cookie('token', token, {
       expires: new Date(Date.now() + 900000),
       httpOnly: true,
@@ -52,13 +65,13 @@ authController.loginUser = async (req, res, next) => {
       res.status(400).json({ message: 'Please provide username and password' });
       return;
     }
-    const user = await User.findOne({ username });
+    const user = await users?.findOne({ username });
     if (!user) {
       res.status(400).json({ message: 'Invalid username' });
       return;
     }
     const authActualPass = await bcrypt.compare(password, user.password);
-    const authCryptPass = await User.findOne({ password });
+    const authCryptPass = await users?.findOne({ password });
     const auth = authActualPass || authCryptPass;
     if(!auth) {
       res.status(400).json({ message: 'Invalid password' });
@@ -82,7 +95,7 @@ authController.loginUser = async (req, res, next) => {
 
 authController.getUser = async (req, res) => {
   try {
-    const findUser = await User.findOne({ username: req.params.username });
+    const findUser = await users?.findOne({ username: req.params.username });
     if (!findUser) {
       res.status(400).json({ message: 'User not found' });
       return;

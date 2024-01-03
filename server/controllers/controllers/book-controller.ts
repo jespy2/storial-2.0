@@ -1,10 +1,16 @@
-import { Book } from '../../models'
+import { Collection, InsertOneResult, ObjectId } from 'mongodb';
 
+import { Book } from '../../models'
+import { connectToDatabase, collections } from '../../service/database.services';
 import { IBookController, IBook } from '../../types';
 
-
 const bookController = {} as IBookController;
-const genericErrorMsg = 'An unexpected error occured'
+const genericErrorMsg = 'An unexpected error occured';
+let books: Collection<IBook> | undefined;
+connectToDatabase().then(() => {
+    books = collections.books;
+})
+
 bookController.createBook = async (req, res): Promise<void> => {
     const newBook: IBook = req.body;
     
@@ -16,24 +22,20 @@ bookController.createBook = async (req, res): Promise<void> => {
         return;
     }
 
-    const book = new Book(newBook)
+    try {
+        const book = await books?.insertOne(newBook)
 
     if (!book) {
         res.status(400).json({ success: false, error: Error });
         return;
     }
 
-    try {
-        await book
-            .save()
-            .then(() => {
-                return res.status(201).json({
+    res.status(201).json({
                     success: true,
-                    id: book._id,
+                    id: book.insertedId,
                     message: 'Book created!',
                 })
-            })
-    } catch(error) {
+    } catch (error) {
             res.status(500).json({
                 error,
                 message: 'Book not created!',
@@ -43,9 +45,11 @@ bookController.createBook = async (req, res): Promise<void> => {
 
 
 bookController.updateBook = async (req, res): Promise<void> => {
-    const body: IBook = req.body
+    const updatedBook: IBook = req.body
+    const query = { _id: req.body._id }
+    const bookTitle = req.body.book.title
 
-    if (!body) {
+    if (!updatedBook) {
         res.status(400).json({
             success: false,
             error: 'You must provide a body to update',
@@ -54,25 +58,13 @@ bookController.updateBook = async (req, res): Promise<void> => {
     }
     
     try {
-        const book = await Book.findOne({ _id: req.params.id });
-            if (!book || !book.book) {
-                res.status(404).json({
-                    message: 'Book not found!',
-                });
-                return;
-            }
-        book.username = body.username    
-        book.book.title = body.book.title
-        book.book.author = body.book.author
-        book.book.notes = body.book.notes
-        book.book.status = body.book.status
-            await book.save();
-            
-            res.status(200).json({
-                success: true,
-                id: book._id,
-                message: 'Book updated!',
-            });
+        // $set adds new fields to the document if they do not already exist, else updates them
+        const updateBook = await books?.updateOne(query, { $set: updatedBook })
+        
+        updateBook 
+            ? res.status(200).json({ success: true, message: `${bookTitle} has been updated!` })
+            : res.status(404).json({ success: false, message: `${bookTitle} not found!` })
+        return;
     } catch (error) {
         res.status(404).json({
             error,
@@ -82,15 +74,19 @@ bookController.updateBook = async (req, res): Promise<void> => {
 }
 
 bookController.deleteBook = async (req, res): Promise<void> => {
-    try {
-        const deleteBook = await Book.findOneAndDelete({ _id: req.params.id });
+    const id = req.params.id;
 
-        if (!deleteBook) {
-            res.status(404).json({ success: false, error: `Book not found` });
-            return;
-        }
-        res.status(200).json({ success: true, data: deleteBook })
-        return;
+    try {
+        const query = { _id: new ObjectId(id)}
+        const deleteBook = await books?.deleteOne(query);
+
+        if (deleteBook && deleteBook.deletedCount) {
+            res.status(200).send(`Book with id: ${id} deleted`);
+          } else if (!deleteBook) {
+            res.status(400).send(`Book with id: ${id} not removed`);
+          } else if (!deleteBook.deletedCount) {
+            res.status(404).send(`Book with id: ${id} not found`);
+          }
     } catch (error) {
         if (error instanceof Error) {
             res.status(500).send(error.message)
@@ -120,24 +116,24 @@ bookController.getBookById = async (req, res): Promise<void> => {
 
 bookController.getBooks = async (req, res): Promise<void> => {
     try {
-        const booksData: IBook[] = await Book.find({username: req.params.username})
+        const booksData: IBook[] = await books?.find({ username: req.params.username })
+            .toArray() as IBook[]
         if (!booksData) {
             const initData = {
                 username: req.params.username,
                 book: {
+                    _id: new ObjectId().toString(),
                     title: '',
                     author: '',
                     notes: '',
-                    status: 'unread'
+                    status: 'unread' as const
                 }
             }
-            const seed = new Book(initData)
-            
-            await seed
-                .save()
-                .then(() => {
-                    return res.status(200).json({ success: true, data: seed, message: 'Seeded!' })
-                })
+            const seed: InsertOneResult<IBook> | undefined = await books?.insertOne(initData)
+            if(seed){
+                res.status(200).json({ success: true, data: seed, message: 'Seeded!' });
+                return;
+                }
         }
         res.status(200).json({ success: true, data: booksData })
         return;
