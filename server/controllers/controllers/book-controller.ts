@@ -45,10 +45,17 @@ bookController.createBook = async (req, res): Promise<void> => {
 
 
 bookController.updateBook = async (req, res): Promise<void> => {
-    const updatedBook: IBook = req.body
-    const query = { _id: req.body._id }
+    const updatedBook: IBook = {
+        username: req.body.username,
+        book: {
+            _id: req.body._id,
+            title: req.body.book.title,
+            author: req.body.book.author,
+            notes: req.body.book.notes,
+            status: req.body.book.status
+        }
+    }
     const bookTitle = req.body.book.title
-
     if (!updatedBook) {
         res.status(400).json({
             success: false,
@@ -59,8 +66,8 @@ bookController.updateBook = async (req, res): Promise<void> => {
     
     try {
         // $set adds new fields to the document if they do not already exist, else updates them
-        const updateBook = await books?.updateOne(query, { $set: updatedBook })
-        
+        const updateBook = await books?.updateOne({_id: new ObjectId(updatedBook.book._id)}, { $set: updatedBook })
+        console.log('updateBook:  ', updateBook)
         updateBook 
             ? res.status(200).json({ success: true, message: `${bookTitle} has been updated!` })
             : res.status(404).json({ success: false, message: `${bookTitle} not found!` })
@@ -79,7 +86,7 @@ bookController.deleteBook = async (req, res): Promise<void> => {
     try {
         const query = { _id: new ObjectId(id)}
         const deleteBook = await books?.deleteOne(query);
-
+        console.log('deleteBook:  ', deleteBook)
         if (deleteBook && deleteBook.deletedCount) {
             res.status(200).send(`Book with id: ${id} deleted`);
           } else if (!deleteBook) {
