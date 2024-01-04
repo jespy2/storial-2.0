@@ -2,6 +2,7 @@
   "name": "storial-2.0",
   "version": "0.1.0",
   "private": true,
+  "homepage": "storial",
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^2.0.1",

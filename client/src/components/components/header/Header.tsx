@@ -1,6 +1,8 @@
 import { Logout, ModeToggle } from '../..'
 import { useAppSelector } from '../../../hooks'
 
+import StorialLogo from '../../../images/storial-logo.svg';
+
 export const Header = ({ title }: { title: string }) => {
   const loggedInState = useAppSelector((state) => state.auth.auth.isAuthenticated)
   return (
@@ -9,7 +11,7 @@ export const Header = ({ title }: { title: string }) => {
       <ModeToggle />
       <div className='header-container'>
         <img
-          src='/storial-logo.png'
+          src={StorialLogo}
           alt='Storial Logo'
           className='header-logo'
         />

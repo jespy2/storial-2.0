@@ -39,6 +39,7 @@ For 2.0, I refactored the app with new features, cleaner/DRYer code, improved pe
     - Pills to display read/unread status that also act as toggle buttons for said status
     - Tooltips for clickable icons 
   - Dark mode
+  - Deploy live version (cloud-db branch).
 
 ## Stretch Features
 
@@ -48,7 +49,6 @@ In the future, I'd like to add the following:
   - Apply input field custom hooks to forms (already being used in add book form)
   - Additional fields such as date entered and genre
   - Genre field that has preset options, but editable by user
-  - Hosted DB with app running live.
   - Add state persistance to table so that changes in local state for the pills (read vs unread) doesn't reload app.
 
 ## Design Notes

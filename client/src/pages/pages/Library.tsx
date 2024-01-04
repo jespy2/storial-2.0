@@ -35,7 +35,7 @@ export const Library = () => {
 
 	useEffect(() => {
 		if (!isAuthenticated) {
-			navigate("/");
+			navigate("/storial");
 		}
 	});
 
@@ -48,7 +48,7 @@ export const Library = () => {
 					{!isLoading && <Table />}
 
 					<section className='flex flex-col sm:flex-row items-center justify-center w-full flex-1 mb-6 md:px-20 text-center md:pb-20 lg:-mt-10 '>
-						<Link to='/'>
+						<Link to='/storial'>
 							<button className='standard-btn'>home</button>
 						</Link>
 

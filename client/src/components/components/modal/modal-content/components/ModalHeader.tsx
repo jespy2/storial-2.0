@@ -4,6 +4,8 @@ import { AppDispatch } from "../../../../../redux/store";
 import { closeModal } from "../../../../../redux/slices";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
+import StorialLogo from "../../../../../images/storial-logo.svg";
+
 export const ModalHeader = ({ title }: { title: string }) => {
 	const dispatch = useDispatch<AppDispatch>();
 
@@ -11,7 +13,7 @@ export const ModalHeader = ({ title }: { title: string }) => {
 		<>
 			<div className='modal-header-topbar'>
 				<img
-					src='/storial-logo.png'
+					src={StorialLogo}
 					alt='Storial Logo'
 					className='modal-header-logo'
 				/>
