@@ -2,11 +2,11 @@ import axios from 'axios'
 import { IBook, IUser } from '../types'
 
 const book_api = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'https://storial-server.onrender.com/api',
 });
 
 const auth_api = axios.create({
-    baseURL: 'http://localhost:8000/auth',
+    baseURL: 'https://storial-server.onrender.com/auth',
 });
 
 export const insertBook = (payload: IBook) => book_api.post(`/book`, payload);

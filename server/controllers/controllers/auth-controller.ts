@@ -2,7 +2,7 @@ import { Collection } from 'mongodb';
 import bcrypt from 'bcryptjs';
 
 import { connectToDatabase, collections } from '../../service/database.services';
-import { createSecretToken } from '../../SecretToken';
+import { createSecretToken } from '../../util/SecretToken';
 import { IAuthController, IUser } from '../../types';
 
 let users: Collection<IUser> | undefined;
