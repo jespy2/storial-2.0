@@ -106,6 +106,7 @@ bookController.deleteBook = async (req, res): Promise<void> => {
 bookController.getBookById = async (req, res): Promise<void> => {
     try {
         const findBook = await Book.findOne({ _id: req.params.id });
+        console.log('findBook:  ', findBook)
         if (!findBook) {
             res.status(404).json({ success: false, error: `Book not found` });
             return;
