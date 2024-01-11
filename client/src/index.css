@@ -47,7 +47,7 @@
 
 /* FOOTER COMPONENT */
 .footer-container {
-  @apply flex items-center justify-center w-full md:h-14 border-t absolute inset-x-0 bottom-0 text-xs md:text-base
+  @apply flex items-center justify-center w-full max-h-5 md:max-h-14 border-t absolute inset-x-0 bottom-0 text-xs md:text-base
 }
 
 .espylogo {
