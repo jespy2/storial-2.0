@@ -9,5 +9,6 @@ export { ModeToggle } from './components/mode-toggle/ModeToggle';
 export { Notification } from './components/notification/Notification';
 export { Pill } from './components/pill/Pill';
 export { Signup } from './components/signup/Signup';
+export { Spinner } from './components/spinner/Spinner'
 export { Table } from './components/table/Table';
 export { Tooltip } from './components/tooltip/Tooltip';

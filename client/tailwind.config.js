@@ -27,10 +27,21 @@ module.exports = {
           transform: 'translateX(-200px)',
         },
       },
+      'spin': {          
+        '0%': {
+          '-webkit-transform': 'rotate(0deg)',
+          transform: 'rotate(0deg)',
+        },
+        '100%': {
+          '-webkit-transform': 'rotate(360deg)',
+          transform: 'rotate(360deg)',
+        },
+      }
     },
     animation: {
       'slide-in': 'slide-in 0.5s ease-out',
-      'slide-out' : 'slide-out 0.5s ease-out',
+      'slide-out': 'slide-out 0.5s ease-out',
+      'spin': 'spin 2s linear infinite'
     }
   }
 }

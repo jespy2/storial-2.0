@@ -8,7 +8,7 @@ const { createUser, loginUser, getUser } = authThunks;
 const initialAuthState: IAuthState = {
   auth: {
     isAuthenticated: false,
-    isRegistered: true,
+    isRegistered: undefined,
     userInfo: {
       email: '',
       password: '',
