@@ -25,6 +25,6 @@
     "./jest-setup.ts"
   ],
   "files": [
-    "types/index.ts", "/types/custom.d.ts"
+    "src/types/index.ts", "src/types/custom.d.ts"
   ]
 }
