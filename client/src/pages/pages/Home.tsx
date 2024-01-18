@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { Home as HomeContent, Login, Logout, Signup, Spinner } from "../../components";
@@ -7,14 +7,15 @@ import { useAppSelector } from "../../hooks";
 import { authThunks } from "../../redux/thunks";
 import { IUser } from "../../types";
 import { AppDispatch } from "../../redux/store";
+import { logUserOut } from "../../redux/slices";
 
 export const Home = () => {
-	const [loginStatusLoaded, setloginStatusLoaded] = useState<boolean>()
 	const authState = useAppSelector((state) => state.auth.auth);
-	const { isAuthenticated, isRegistered } = authState;
+	const { isLoggedIn, isRegistered } = authState;
 	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
+		setTimeout(() => {console.log('authState', authState)}, 5000)
 		if (getCookie("keepLoggedIn")) {
 			const payload: IUser = {
 				username: getCookie("userName") as string,
@@ -22,33 +23,25 @@ export const Home = () => {
 				email: getCookie("email") as string,
 			};
 			dispatch(authThunks.loginUser(payload));
-		}
-	}, [dispatch]);
-
-	useEffect(() => {
-		if (isAuthenticated === undefined || isRegistered === undefined) {
-			setloginStatusLoaded(false)
-		}
-		if (isAuthenticated !== undefined && isRegistered !== undefined) {
-			setloginStatusLoaded(true)
-		}
-	}, [isAuthenticated, isRegistered])
+		} else dispatch(logUserOut());
+		console.log('2nd authState', authState)
+	}, []);
 
 	return (
 		<div className='page-container'>
-			{!loginStatusLoaded && 
-					<Spinner />
+			{isLoggedIn === undefined && 
+				<Spinner />
 			}
-			{loginStatusLoaded &&
+			{isLoggedIn && (
 				<>
-					{isAuthenticated && (
-						<>
-							<Logout />
-							<HomeContent />
-						</>
-					)}
-					{isAuthenticated === false && isRegistered === false && <Signup />}
-					{isAuthenticated === false && isRegistered && <Login />}
+					<Logout />
+					<HomeContent />
+				</>
+			)}
+			{isLoggedIn === false &&
+				<>
+				{!isRegistered && <Signup />}
+				{(isRegistered) && <Login />}
 				</>
 			}
 		</div>

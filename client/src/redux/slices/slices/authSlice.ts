@@ -7,8 +7,9 @@ const { createUser, loginUser, getUser } = authThunks;
 
 const initialAuthState: IAuthState = {
   auth: {
+    isLoggedIn: undefined,
     isAuthenticated: false,
-    isRegistered: undefined,
+    isRegistered: true,
     userInfo: {
       email: '',
       password: '',
@@ -27,6 +28,7 @@ export const authSlice = createSlice({
       state = {
         auth:
         {
+          isLoggedIn: action.payload.success,
           isAuthenticated: action.payload.success,
           isRegistered: action.payload.success,
           userInfo: {
@@ -40,6 +42,7 @@ export const authSlice = createSlice({
       };
     },
     logoutUser: (state) => {
+      state.auth.isLoggedIn = false;
       state.auth.isAuthenticated = false;
       state.auth.isRegistered = true;
       state.auth.userInfo = {
@@ -53,7 +56,8 @@ export const authSlice = createSlice({
     createUser: (state, action) => {
       state = {
         auth:
-        {
+        { 
+          isLoggedIn: action.payload.success,
           isAuthenticated: action.payload.success,
           isRegistered: action.payload.success,
           userInfo: {
@@ -82,6 +86,9 @@ export const authSlice = createSlice({
     userNotRegistered: (state) => { 
       state.auth.isRegistered = false;
     },
+    logUserOut: (state) => { 
+      state.auth.isLoggedIn = false;
+    },
   },
   extraReducers: (builder) => { 
     builder
@@ -95,6 +102,7 @@ export const authSlice = createSlice({
       state.isError = false;
       state.auth =
       {
+        isLoggedIn: action.payload?.response.data.success,
         isAuthenticated: action.payload?.response.data.success,
         isRegistered: action.payload?.response.data.success,
         userInfo: {
@@ -120,6 +128,7 @@ export const authSlice = createSlice({
         state.isError = false;
         state.auth =
         {
+          isLoggedIn: action.payload?.response.data.success,
           isAuthenticated: action.payload?.response.data.success,
           isRegistered: action.payload?.response.data.success,
           userInfo: {
@@ -143,6 +152,7 @@ export const authSlice = createSlice({
     .addCase(getUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      // state.auth.isLoggedIn = action.payload.success;
       state.auth.isAuthenticated = action.payload.success;
       state.auth.userInfo = {
         email: action.payload.data.email,
@@ -159,4 +169,4 @@ export const authSlice = createSlice({
 });
 
 export const { reducer: authReducer, actions: authActions } = authSlice;
-export const { userIsRegistered, userNotRegistered, logoutUser } = authActions;
+export const { userIsRegistered, userNotRegistered, logUserOut, logoutUser } = authActions;

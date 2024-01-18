@@ -45,8 +45,9 @@ export interface IBookState {
 
 export interface IAuthState {
   auth: {
-    isAuthenticated: boolean | undefined;
-    isRegistered: boolean | undefined;
+    isLoggedIn: boolean | undefined;
+    isAuthenticated: boolean;
+    isRegistered: boolean;
     userInfo: IUser;
     }
   isLoading: boolean;
