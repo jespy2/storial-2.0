@@ -39,7 +39,6 @@ For 2.0, I refactored the app with new features, cleaner/DRYer code, improved pe
     - Pills to display read/unread status that also act as toggle buttons for said status
     - Tooltips for clickable icons 
   - Dark mode
-  - Deploy live version (cloud-db branch).
 
 ## Stretch Features
 
@@ -60,7 +59,10 @@ Broadly speaking, this is a very simple CRUD app, which is why I chose it for th
   - Applied a more coherent strategy for the use of Tailwind.CSS.  Global styles (like for 'standard-btn') is now in the index.css file, and everything else is inline with the component/element being styled. 
 
 ### Getting Started
-After cloning into your local directory, you will need to run npm install in both the client and server directories.  
+After cloning into your local directory, checkout "local-version" branch.  
+> *Note: This branch is behind main in terms of versioning.  The main branch is the full app that [has been launched here](https://jamesespy.com/storial/) and has a richer feature set.  The local-version is meant allow folks to play with the code in their own environment and is a simpler version.*
+
+Run npm install in both the client and server directories.  
 Be sure you have [Mongo DB installed](https://docs.mongodb.com/manual/installation/) as well.
 
 Once your dependencies are installed, you will need to open three terminals and enter the following commands:
